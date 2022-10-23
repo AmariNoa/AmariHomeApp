@@ -27,9 +27,7 @@ public class BuildApp
 
         if (target == BuildTarget.NoTarget)
         {
-            string errMsg = "[BuildApp] -buildTarget cannot be null";
-            Debug.LogError(errMsg);
-            throw new ArgumentException(errMsg);
+            throw new ArgumentException("[BuildApp] -buildTarget cannot be null");
         }
 
 
@@ -71,9 +69,7 @@ public class BuildApp
         }
         if (string.IsNullOrEmpty(fileExt))
         {
-            string errMsg = $"[BuildApp] Unsupported build target: {target}";
-            Debug.LogError(errMsg);
-            throw new NotSupportedException(errMsg);
+            throw new NotSupportedException($"[BuildApp] Unsupported build target: {target}");
         }
 
 
@@ -96,24 +92,19 @@ public class BuildApp
             case UnityEditor.Build.Reporting.BuildResult.Failed:
             case UnityEditor.Build.Reporting.BuildResult.Unknown:
                 {
-                    string errMsg = $"[BuildApp] Build failed. (Result: {summary.result})";
-                    Debug.LogError(errMsg);
                     Debug.LogError($"[BuildApp] Error: {summary.totalErrors} / Warning: {summary.totalWarnings}");
-                    throw new Exception(errMsg);
+                    throw new Exception($"[BuildApp] Build failed. (Result: {summary.result})");
                 }
 
             case UnityEditor.Build.Reporting.BuildResult.Cancelled:
                 {
-                    string errMsg = "[BuildApp] Build cancelled.";
-                    Debug.LogWarning(errMsg);
-                    throw new Exception(errMsg);
+                    // TODO 強制終了以外でキャンセルを伝える手段は無いか？
+                    throw new Exception("[BuildApp] Build cancelled.");
                 }
 
             default:
                 {
-                    string errMsg = $"[BuildApp] Unknown build result: {summary.result}";
-                    Debug.LogError(errMsg);
-                    throw new Exception(errMsg);
+                    throw new Exception($"[BuildApp] Unknown build result: {summary.result}");
                 }
         }
     }
