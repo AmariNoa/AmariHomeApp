@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BuildApp
 {
-    public static void Build()
+    public static bool Build()
     {
         var target = BuildTarget.NoTarget;
         var isDevelopment = false;
@@ -28,7 +28,7 @@ public class BuildApp
         if (target == BuildTarget.NoTarget)
         {
             Debug.LogError("[BuildApp] -buildTarget cannot be null");
-            return;
+            return false;
         }
 
 
@@ -76,15 +76,17 @@ public class BuildApp
             case UnityEditor.Build.Reporting.BuildResult.Unknown:
                 Debug.LogError($"[BuildApp] Build failed. (Result: {summary.result})");
                 Debug.LogError($"[BuildApp] Error: {summary.totalErrors} / Warning: {summary.totalWarnings}");
-                return;
+                return false;
 
             case UnityEditor.Build.Reporting.BuildResult.Cancelled:
                 Debug.LogWarning("[BuildApp] Build cancelled.");
-                return;
+                return false;
 
             default:
                 Debug.LogError($"[BuildApp] Unknown build result: {summary.result}");
-                return;
+                return false;
         }
+
+        return true;
     }
 }
