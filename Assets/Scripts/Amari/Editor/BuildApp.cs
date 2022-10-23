@@ -48,13 +48,13 @@ public class BuildApp
         }
 
 
-        /*
         // Check or create directory
         const string BUILD_ROOT_DIR = "Build";
         if (!Directory.Exists(BUILD_ROOT_DIR))
         {
             Directory.CreateDirectory(BUILD_ROOT_DIR);
         }
+        /*
         string BuildDir = BUILD_ROOT_DIR + Path.DirectorySeparatorChar + target.ToString();
         if(!Directory.Exists(BuildDir))
         {
@@ -85,7 +85,7 @@ public class BuildApp
         // Execute build
         var buildOptions = new BuildPlayerOptions();
         buildOptions.scenes = sceneList;
-        buildOptions.locationPathName = Application.productName + fileExt;
+        buildOptions.locationPathName = BUILD_ROOT_DIR + Path.DirectorySeparatorChar + Application.productName + fileExt;
         buildOptions.target = target;
         buildOptions.options = options;
 
