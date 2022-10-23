@@ -48,6 +48,7 @@ public class BuildApp
         }
 
 
+        /*
         // Check or create directory
         const string BUILD_ROOT_DIR = "Build";
         if (!Directory.Exists(BUILD_ROOT_DIR))
@@ -78,12 +79,13 @@ public class BuildApp
             Debug.LogError($"[BuildApp] Unsupported build target: {target}");
             return false;
         }
+        */
 
 
         // Execute build
         var buildOptions = new BuildPlayerOptions();
         buildOptions.scenes = sceneList;
-        buildOptions.locationPathName = BuildDir + Path.DirectorySeparatorChar + Application.productName + fileExt;
+        //buildOptions.locationPathName = BuildDir + Path.DirectorySeparatorChar + Application.productName + fileExt;
         buildOptions.target = target;
         buildOptions.options = options;
 
