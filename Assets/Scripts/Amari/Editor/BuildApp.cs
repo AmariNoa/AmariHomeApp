@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BuildApp
 {
-    public static bool Build()
+    public static void Build()
     {
         var target = BuildTarget.NoTarget;
         var isDevelopment = false;
@@ -27,8 +27,9 @@ public class BuildApp
 
         if (target == BuildTarget.NoTarget)
         {
-            Debug.LogError("[BuildApp] -buildTarget cannot be null");
-            return false;
+            string errMsg = "[BuildApp] -buildTarget cannot be null";
+            Debug.LogError(errMsg);
+            throw new ArgumentException(errMsg);
         }
 
 
@@ -54,16 +55,9 @@ public class BuildApp
         {
             Directory.CreateDirectory(BUILD_ROOT_DIR);
         }
-        /*
-        string BuildDir = BUILD_ROOT_DIR + Path.DirectorySeparatorChar + target.ToString();
-        if(!Directory.Exists(BuildDir))
-        {
-            Directory.CreateDirectory(BuildDir);
-        }
-        */
+        // TODO Buildディレクトリの中身をクリアしないといけないかもしれない
 
         string fileExt = "";
-
         switch (target)
         {
             case BuildTarget.StandaloneWindows:
@@ -77,8 +71,9 @@ public class BuildApp
         }
         if (string.IsNullOrEmpty(fileExt))
         {
-            Debug.LogError($"[BuildApp] Unsupported build target: {target}");
-            return false;
+            string errMsg = $"[BuildApp] Unsupported build target: {target}";
+            Debug.LogError(errMsg);
+            throw new NotSupportedException(errMsg);
         }
 
 
@@ -100,19 +95,26 @@ public class BuildApp
             
             case UnityEditor.Build.Reporting.BuildResult.Failed:
             case UnityEditor.Build.Reporting.BuildResult.Unknown:
-                Debug.LogError($"[BuildApp] Build failed. (Result: {summary.result})");
-                Debug.LogError($"[BuildApp] Error: {summary.totalErrors} / Warning: {summary.totalWarnings}");
-                return false;
+                {
+                    string errMsg = $"[BuildApp] Build failed. (Result: {summary.result})";
+                    Debug.LogError(errMsg);
+                    Debug.LogError($"[BuildApp] Error: {summary.totalErrors} / Warning: {summary.totalWarnings}");
+                    throw new Exception(errMsg);
+                }
 
             case UnityEditor.Build.Reporting.BuildResult.Cancelled:
-                Debug.LogWarning("[BuildApp] Build cancelled.");
-                return false;
+                {
+                    string errMsg = "[BuildApp] Build cancelled.";
+                    Debug.LogWarning(errMsg);
+                    throw new Exception(errMsg);
+                }
 
             default:
-                Debug.LogError($"[BuildApp] Unknown build result: {summary.result}");
-                return false;
+                {
+                    string errMsg = $"[BuildApp] Unknown build result: {summary.result}";
+                    Debug.LogError(errMsg);
+                    throw new Exception(errMsg);
+                }
         }
-
-        return true;
     }
 }
