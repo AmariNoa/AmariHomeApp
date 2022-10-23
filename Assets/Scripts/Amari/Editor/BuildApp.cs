@@ -49,17 +49,41 @@ public class BuildApp
 
 
         // Check or create directory
-        const string BUILD_DIR = "Build";
-        if (!Directory.Exists(BUILD_DIR))
+        const string BUILD_ROOT_DIR = "Build";
+        if (!Directory.Exists(BUILD_ROOT_DIR))
         {
-            Directory.CreateDirectory(BUILD_DIR);
+            Directory.CreateDirectory(BUILD_ROOT_DIR);
+        }
+        string BuildDir = BUILD_ROOT_DIR + Path.DirectorySeparatorChar + target.ToString();
+        if(!Directory.Exists(BuildDir))
+        {
+            Directory.CreateDirectory(BuildDir);
+        }
+
+        string fileExt = "";
+
+        switch (target)
+        {
+            case BuildTarget.StandaloneWindows:
+            case BuildTarget.StandaloneWindows64:
+                fileExt = ".exe";
+                break;
+
+            case BuildTarget.Android:
+                fileExt = ".apk";
+                break;
+        }
+        if (string.IsNullOrEmpty(fileExt))
+        {
+            Debug.LogError($"[BuildApp] Unsupported build target: {target}");
+            return false;
         }
 
 
         // Execute build
         var buildOptions = new BuildPlayerOptions();
         buildOptions.scenes = sceneList;
-        buildOptions.locationPathName = BUILD_DIR + Path.DirectorySeparatorChar + target.ToString();
+        buildOptions.locationPathName = BuildDir + Path.DirectorySeparatorChar + Application.productName + fileExt;
         buildOptions.target = target;
         buildOptions.options = options;
 
